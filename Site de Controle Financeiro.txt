@@ -1,0 +1,33 @@
+Site de Controle Financeiro:
+IA
+Para começarmos a desenhar este projeto, preciso que você me responda a estas três perguntas simples sobre a sua visão:
+1. O Cenário Atual: Como você controla seu dinheiro hoje? (Usa planilha, caderninho, algum aplicativo pronto ou está tudo de cabeça?)
+2. A Frustração: O que mais te incomoda no seu método atual ou nos aplicativos que existem no mercado que te fez querer criar o seu próprio?
+3. O Momento de Uso: Feche os olhos e imagine você usando o seu sistema daqui a alguns meses. Como é esse momento? Você está no computador no fim de semana revisando o mês, ou está no meio da rua abrindo o celular logo após pagar um café?
+
+EU
+1. tudo na cabeça; 
+2. na verdade, foi para estudar um pouco sobre desenvolvimento web e ter no portifolio algo, tbm por ser algo util para vida e não quero mexer no excel ou usar algo pronto q nn posso mexer por dentro(programação) ou por fora(personalização das tabelas ou graficos no site por exemplo) ou pagar alguem para fazer isso por mim ou fazer um curso; 
+3. vendo meus gastos num final de semana a noite vendo com o q posso ou não posso gastar, vendo minhas metas, investimentos e planos.
+
+IA
+Analisando suas respostas como engenheiro, cheguei a três conclusões críticas que vão moldar todo o nosso projeto:
+1. Portfólio e Aprendizado: Como o objetivo principal é estudar e criar um portfólio, precisamos usar tecnologias modernas e limpas, mas sem complicar demais a arquitetura para você não travar no meio do caminho.
+2. Foco Total em Telas Grandes (Desktop): Como o seu momento de uso é no "final de semana à noite", o foco principal do design e das funcionalidades será o computador, e não o celular. Isso facilita muito o desenvolvimento web inicial, pois criar tabelas e gráficos ricos é muito mais simples para telas grandes.
+3. Alto Nível de Customização: Como você quer total liberdade sobre os dados, tabelas e gráficos (o que o Excel ou apps prontos não te dão), nossa modelagem de dados precisa ser flexível para você mudar as regras do jogo quando quiser.
+
+IA
+Escopo do MVP(Produto Mínimo Viável):
+Para esta primeira versão do sistema, o que você acha de focarmos apenas nestes três pilares?:
+Pilar 1: O Painel de Entrada (Lançamentos)
+- Um formulário na tela para você digitar o gasto/ganho, escolher a categoria e a data.
+- Uma tabela limpa e elegante mostrando o histórico do que foi digitado.
+Pilar 2: O Painel de Análise (Dashboard)
+- Gráficos visuais mostrando a divisão dos seus gastos por categoria no mês.
+- Um indicador simples de "Saldo Atual" (Receitas menos Despesas).
+Pilar 3: O Painel de Futuro (Metas e Planos)
+- Um espaço simples onde você define quanto quer poupar/investir no mês e o sistema te mostra visualmente se você está perto ou longe da meta.
+O que você achou dessa proposta de escopo para começarmos?
+
+EU
+
