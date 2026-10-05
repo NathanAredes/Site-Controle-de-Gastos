@@ -1,0 +1,162 @@
+/* ==========================================================================
+   1. CONFIGURAÇÕES GERAIS E CORES (Variáveis)
+   ========================================================================== */
+:root {
+    --cor-fundo: #f4f6f9;
+    --cor-card: #ffffff;
+    --cor-texto: #333333;
+    --cor-borda: #e0e0e0;
+    --cor-primaria: #4f46e5; /* Azul Indigo moderno */
+    --cor-receita: #10b981;  /* Verde */
+    --cor-despesa: #ef4444;  /* Vermelho */
+    --cor-investimento: #3b82f6; /* Azul */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+}
+
+/* ==========================================================================
+   2. BARRA DE NAVEGAÇÃO (Navbar)
+   ========================================================================== */
+.navbar {
+    background-color: var(--cor-card);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.navbar h1 {
+    font-size: 1.4rem;
+    color: var(--cor-primaria);
+}
+
+.navbar nav a {
+    text-decoration: none;
+    color: #666;
+    margin-left: 1.5rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.navbar nav a:hover, .navbar nav a.active {
+    background-color: #eeebff;
+    color: var(--cor-primaria);
+}
+
+/* ==========================================================================
+   3. ESTRUTURA DO LAYOUT (Container)
+   ========================================================================== */
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    /* Divide a tela do PC: Formulário na esquerda (400px) e Tabela na direita (resto) */
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 2rem;
+}
+
+/* ==========================================================================
+   4. FORMULÁRIO DE CADASTRO
+   ========================================================================== */
+.campo {
+    margin-bottom: 1.2rem;
+}
+
+.campo label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #555;
+}
+
+.campo input, .campo select {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.campo input:focus, .campo select:focus {
+    border-color: var(--cor-primaria);
+}
+
+.btn-link {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: var(--cor-primaria);
+    margin-top: 0.4rem;
+    text-decoration: none;
+}
+
+.btn-salvar {
+    width: 100%;
+    background-color: var(--cor-primaria);
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-salvar:hover {
+    background-color: #4338ca;
+}
+
+/* ==========================================================================
+   5. TABELA DE HISTÓRICO
+   ========================================================================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--cor-fundo);
+}
+
+th {
+    background-color: var(--cor-fundo);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: #666;
+    font-weight: 600;
+}
+
+/* Atendendo ao Requisito [RF-002]: Cores customizadas para o tipo de gasto */
+.linha-despesa td:last-child {
+    color: var(--cor-despesa);
+    font-weight: bold;
+}
+
+.linha-receita td:last-child {
+    color: var(--cor-receita);
+    font-weight: bold;
+}
+
+.linha-investimento td:last-child {
+    color: var(--cor-investimento);
+    font-weight: bold;
+}
+
