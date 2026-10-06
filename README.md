@@ -1,3 +1,4 @@
 # Site-Controle-de-Gastos
 
-Site feito Muita ajuda de IA.
+Site feito MUITA ajuda de IA.
+É para uso pessoal.
