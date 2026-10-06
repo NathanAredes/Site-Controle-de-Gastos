@@ -1,11 +1,54 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle Financeiro</title>
+    <title>Finanças Pessoais - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Importando a biblioteca de Gráficos (Chart.js) -->
+    <script src="https://jsdelivr.net"></script>
 </head>
 <body>
-    
+
+    <header class="navbar">
+        <h1>Meu Controle Financeiro</h1>
+        <nav>
+            <a href="index.html" class="active">Dashboard</a>
+            <a href="lancamentos.html">Lançamentos</a>
+        </nav>
+    </header>
+
+    <main class="container-dashboard">
+        <!-- BLOCO 1: Cartões de Saldo [RF-003] -->
+        <section class="cards-resumo">
+            <div class="card card-receita">
+                <h3>Total Receitas</h3>
+                <p id="total-receitas">R$ 0,00</p>
+            </div>
+            <div class="card card-despesa">
+                <h3>Total Despesas</h3>
+                <p id="total-despesas">R$ 0,00</p>
+            </div>
+            <div class="card card-investimento">
+                <h3>Investido/Reserva</h3>
+                <p id="total-investido">R$ 0,00</p>
+            </div>
+            <div class="card card-saldo">
+                <h3>Saldo Atual</h3>
+                <p id="saldo-atual">R$ 0,00</p>
+            </div>
+        </section>
+
+        <!-- BLOCO 2: Gráfico de Categorias [RF-004] -->
+        <section class="card-grafico">
+            <h2>Distribuição de Gastos por Categoria</h2>
+            <div class="canvas-container">
+                <canvas id="graficoCategorias"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <!-- Vinculando o mesmo arquivo JS para centralizar a lógica -->
+    <script src="js/app.js"></script>
 </body>
 </html>

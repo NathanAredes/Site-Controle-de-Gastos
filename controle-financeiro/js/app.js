@@ -1,76 +1,72 @@
 // ==========================================================================
-// 1. CAPTURA DOS ELEMENTOS DA TELA (DOM)
+// 1. BANCO DE DADOS TEMPORÁRIO (Memória + LocalStorage)
 // ==========================================================================
-// Pegamos o formulário e a tabela do HTML para o JavaScript conseguir mexer neles
-const formTransacao = document.getElementById('form-transacao');
-const tabelaGastosBody = document.querySelector('#tabela-gastos tbody');
+let listaTransacoes = JSON.parse(localStorage.getItem('minhasFinancasTransacoes')) || [];
 
 // ==========================================================================
-// 2. BANCO DE DADOS TEMPORÁRIO (Memória do Navegador)
+// 2. IDENTIFICADOR DE PÁGINAS (Roteamento simples)
 // ==========================================================================
-// Como ainda não conectamos o banco em nuvem, criamos uma lista (Array) na memória
-let listaTransacoes = [];
-
-// ==========================================================================
-// 3. FUNÇÃO PARA ADICIONAR UMA NOVA TRANSAÇÃO
-// ==========================================================================
-formTransacao.addEventListener('submit', function(evento) {
-    // Evita que a página recarregue ao enviar o formulário (comportamento padrão do HTML)
-    evento.preventDefault();
-
-    // Captura os valores que você digitou nos campos
-    const descricao = document.getElementById('descricao').value;
-    const valor = parseFloat(document.getElementById('valor').value);
-    const data = document.getElementById('data').value;
-    const tipo = document.getElementById('tipo').value;
-    
-    // Captura o texto da categoria selecionada (Alimentação, Lazer, etc.)
-    const selectCategoria = document.getElementById('categoria');
-    const categoriaTexto = selectCategoria.options[selectCategoria.selectedIndex].text;
-
-    // Formata a data de YYYY-MM-DD para o padrão brasileiro DD/MM/YYYY
-    const dataFormatada = data.split('-').reverse().join('/');
-
-    // Cria um objeto representando a nova transação
-    const novaTransacao = {
-        data: dataFormatada,
-        descricao: descricao,
-        categoria: categoriaTexto,
-        tipo: tipo,
-        valor: valor
-    };
-
-    // Adiciona o novo gasto no início da nossa lista (atendendo ao requisito de mais recentes no topo)
-    listaTransacoes.unshift(novaTransacao);
-
-    // Atualiza a tabela na tela
-    atualizarTabela();
-
-    // Limpa os campos do formulário para você digitar o próximo gasto
-    formTransacao.reset();
+// Executa funções diferentes dependendo de qual página está aberta no navegador
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('form-transacao')) {
+        // Se encontrar o formulário, estamos na página de LANÇAMENTOS
+        inicializarPaginaLancamentos();
+    } else if (document.getElementById('graficoCategorias')) {
+        // Se encontrar o canvas do gráfico, estamos na página de DASHBOARD
+        inicializarPaginaDashboard();
+    }
 });
 
 // ==========================================================================
-// 4. FUNÇÃO QUE DESENHA A TABELA NA TELA
+// 3. LÓGICA DA PÁGINA DE LANÇAMENTOS (O código que já criamos)
 // ==========================================================================
-function atualizarTabela() {
-    // Limpa todo o conteúdo atual da tabela para não duplicar os dados
-    tabelaGastosBody.innerHTML = '';
+function inicializarPaginaLancamentos() {
+    const formTransacao = document.getElementById('form-transacao');
+    const tabelaGastosBody = document.querySelector('#tabela-gastos tbody');
 
-    // Passa por cada transação da nossa lista e cria uma linha (tr) no HTML
+    // Desenha a tabela com os dados salvos logo ao abrir a página
+    atualizarTabela(tabelaGastosBody);
+
+    formTransacao.addEventListener('submit', function(evento) {
+        evento.preventDefault();
+
+        const descricao = document.getElementById('descricao').value;
+        const valor = parseFloat(document.getElementById('valor').value);
+        const data = document.getElementById('data').value;
+        const tipo = document.getElementById('tipo').value;
+        const selectCategoria = document.getElementById('categoria');
+        const categoriaTexto = selectCategoria.options[selectCategoria.selectedIndex].text;
+
+        const dataFormatada = data.split('-').reverse().join('/');
+
+        const novaTransacao = {
+            data: dataFormatada,
+            descricao: descricao,
+            categoria: categoriaTexto,
+            tipo: tipo,
+            valor: valor
+        };
+
+        listaTransacoes.unshift(novaTransacao);
+        localStorage.setItem('minhasFinancasTransacoes', JSON.stringify(listaTransacoes));
+        
+        atualizarTabela(tabelaGastosBody);
+        formTransacao.reset();
+    });
+}
+
+function atualizarTabela(tabelaBody) {
+    tabelaBody.innerHTML = '';
+
     listaTransacoes.forEach(function(transacao) {
         const linha = document.createElement('tr');
-        
-        // Aplica a classe CSS correta baseada no tipo (linha-despesa, linha-receita, linha-investimento)
         linha.className = `linha-${transacao.tipo}`;
 
-        // Formata o valor para a moeda brasileira (R\$)
         const valorFormatado = transacao.valor.toLocaleString('pt-BR', {
             style: 'currency',
             currency: 'BRL'
         });
 
-        // Monta as colunas (td) da linha
         linha.innerHTML = `
             <td>${transacao.data}</td>
             <td>${transacao.descricao}</td>
@@ -78,8 +74,75 @@ function atualizarTabela() {
             <td>${transacao.tipo.charAt(0).toUpperCase() + transacao.tipo.slice(1)}</td>
             <td>${valorFormatado}</td>
         `;
+        tabelaBody.appendChild(linha);
+    });
+}
 
-        // Coloca a nova linha dentro do corpo da tabela
-        tabelaGastosBody.appendChild(linha);
+// ==========================================================================
+// 4. LÓGICA DA PÁGINA DE DASHBOARD (A Novidade!)
+// ==========================================================================
+function inicializarPaginaDashboard() {
+    let totalReceitas = 0;
+    let totalDespesas = 0;
+    let totalInvestido = 0;
+
+    // Objeto para agrupar e somar os gastos por categoria (Ex: { Alimentação: 150, Lazer: 40 })
+    const gastosPorCategoria = {};
+
+    // Passo A: Passar por cada transação fazendo os cálculos matemáticos
+    listaTransacoes.forEach(function(transacao) {
+        if (transacao.tipo === 'receita') {
+            totalReceitas += transacao.valor;
+        } else if (transacao.tipo === 'despesa') {
+            totalDespesas += transacao.valor;
+
+            // Se for despesa, agrupa o valor na categoria correspondente para o gráfico
+            if (gastosPorCategoria[transacao.categoria]) {
+                gastosPorCategoria[transacao.categoria] += transacao.valor;
+            } else {
+                gastosPorCategoria[transacao.categoria] = transacao.valor;
+            }
+        } else if (transacao.tipo === 'investimento') {
+            totalInvestido += transacao.valor;
+        }
+    });
+
+    // Passo B: Calcular o Saldo Atual aplicando a nossa regra de negócio [RF-003]
+    const saldoAtual = totalReceitas - totalDespesas - totalInvestido;
+
+    // Passo C: Injetar os valores formatados nos cartões HTML da tela
+    document.getElementById('total-receitas').innerText = totalReceitas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    document.getElementById('total-despesas').innerText = totalDespesas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    document.getElementById('total-investido').innerText = totalInvestido.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    document.getElementById('saldo-atual').innerText = saldoAtual.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    // Passo D: Gerar o Gráfico com o Chart.js [RF-004]
+    const categoriasVisuais = Object.keys(gastosPorCategoria); // Pega os nomes (Ex: ["Alimentação", "Lazer"])
+    const valoresVisuais = Object.values(gastosPorCategoria);     // Pega os valores (Ex:)
+
+    const ctx = document.getElementById('graficoCategorias').getContext('2d');
+    
+    // Se não houver despesas cadastradas, exibe um aviso em vez do gráfico vazio
+    if (categoriasVisuais.length === 0) {
+        document.querySelector('.canvas-container').innerHTML = "<p style='color:#666; padding-top:2rem;'>Nenhuma despesa cadastrada para gerar o gráfico.</p>";
+        return;
+    }
+
+    new Chart(ctx, {
+        type: 'doughnut', // Gráfico estilo Donut (Rosca), fica muito moderno!
+        data: {
+            labels: categoriasVisuais,
+            datasets: [{
+                data: valoresVisuais,
+                backgroundColor: [
+                    '#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#8b5cf6'
+                ], // Cores bonitas para cada fatia do gráfico
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
     });
 }
